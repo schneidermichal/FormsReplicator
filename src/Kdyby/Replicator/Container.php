@@ -242,9 +242,19 @@ class Container extends Nette\Forms\Container
 
 		return parent::setValues($values, $erase, $onlyDisabled);
 	}
-
-
-
+	
+	public function validate(array $controls = NULL) {
+		if (!$this->isAllFilled()) {
+			foreach ($this->getContainers() as $container) {
+				if (!isset($this->httpPost[$container->getName()])) {
+					$this->remove($container);
+				}
+			}
+		}
+		
+		return parent::validate($controls);
+	}
+	
 	/**
 	 * Loads data received from POST
 	 * @internal
